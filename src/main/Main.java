@@ -1,6 +1,7 @@
-package server;
+package main;
 
 import client.Client;
+import server.Server;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        Thread clientThread = new Thread(new Client(serverPort));
+        Thread clientThread = new Thread(new Client("localhost", serverPort));
         clientThread.setDaemon(true);
         clientThread.start();
 
@@ -35,5 +36,9 @@ public class Main {
 
     public static synchronized void println(String message) {
         System.out.println(message);
+    }
+
+    public static synchronized void print(String message) {
+        System.out.print(message);
     }
 }
