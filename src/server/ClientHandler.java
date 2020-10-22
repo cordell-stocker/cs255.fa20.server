@@ -30,6 +30,8 @@ public class ClientHandler implements Runnable {
             HELP_COMMAND, TOGGLE_ECHO_COMMAND, LS_COMMAND, CD_COMMAND, DOWNLOAD_COMMAND
     };
 
+    private static final String[] VALID_FILES = new String[]{"snek.png", "todo.txt", "dog.jpg", "cat.jpg"};
+
     private static final int OK = 200;
     private static final int BAD_REQUEST = 400;
 
@@ -388,6 +390,24 @@ public class ClientHandler implements Runnable {
         try {
             String filePath = "src/" + this.location + "/" + requestedFilePath;
             String ext = filePath.substring(filePath.lastIndexOf('.') + 1);
+
+            String fileName = requestedFilePath.substring(requestedFilePath.lastIndexOf("/"));
+            boolean isValidFile = false;
+            for (String validFile : VALID_FILES) {
+                if (fileName.equals(validFile)) {
+                    isValidFile = true;
+                    break;
+                }
+            }
+            if (!isValidFile) {
+                return new Message(
+                        BAD_REQUEST,
+                        this.location,
+                        CONSOLE_TEXT_CONTENT_TYPE,
+                        "Requested an invalid file option".getBytes()
+                );
+            }
+
             File file = new File(filePath);
             if (!file.exists()) {
                 throw new FileNotFoundException();
